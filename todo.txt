@@ -1,0 +1,28 @@
+
+
+[ ] - Implement a separate page to actually create a new note
+    [ ] - Implement compose navigation for that
+[ ] - Save the data locally to an internal database using a Repository and a DAO
+[ ] - Make the NoteRepository use NoteDao interface instead of an implementation - read up on Dagger
+[ ] - apply the Kotlin codestyle
+
+/*
+com.example.myapp.presentation
+activities
+fragments
+viewmodels
+adapters
+utils
+com.example.myapp.domain
+repositories
+usecases
+entities
+com.example.myapp.data
+local
+remote
+models
+mappers
+utils
+
+
+*/
