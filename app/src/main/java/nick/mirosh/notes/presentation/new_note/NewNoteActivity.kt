@@ -30,6 +30,7 @@ import nick.mirosh.notes.domain.Note
 import nick.mirosh.notes.presentation.main.MainViewModel
 import nick.mirosh.notes.presentation.theme.MyApplicationTheme
 import javax.inject.Inject
+
 @AndroidEntryPoint
 class NewNoteActivity : ComponentActivity() {
 
@@ -44,28 +45,36 @@ class NewNoteActivity : ComponentActivity() {
         if (noteId != -1) {
             newNoteViewModel.initNote(noteId)
         }
-
         setContent {
             MyApplicationTheme {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                ) {
-
-                    val note by newNoteViewModel.note.observeAsState(Note(content = ""))
-
-                    var textFieldValue by remember { mutableStateOf(TextFieldValue(note.content)) }
-
-                    Column {
-                        TextEntryField(label = "Enter your note", text = textFieldValue) {
-                            textFieldValue = it
-                        }
-                        CompleteButton {
-                            newNoteViewModel.createOrUpdateNote(textFieldValue.text)
-                            finish()
-                        }
-
-                    }
+                NewNoteScreen(newNoteViewModel) {
+                    newNoteViewModel.createOrUpdateNote(it)
+                    finish()
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun NewNoteScreen(
+    newNoteViewModel: NewNoteViewModel,
+    onCompleteButtonClicked: (String) -> Unit
+) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+    ) {
+
+        val note by newNoteViewModel.note.observeAsState(Note(content = ""))
+
+        var textFieldValue by remember { mutableStateOf(TextFieldValue(note.content)) }
+
+        Column {
+            TextEntryField(label = "Enter your note", text = textFieldValue) {
+                textFieldValue = it
+            }
+            CompleteButton {
+                onCompleteButtonClicked(textFieldValue.text)
             }
         }
     }

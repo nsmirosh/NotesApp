@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,14 +32,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModelProvider
 import dagger.hilt.android.AndroidEntryPoint
-import nick.mirosh.notes.data.di.MyApplication
 import nick.mirosh.notes.domain.Note
 import nick.mirosh.notes.presentation.composables.NoteItem
 import nick.mirosh.notes.presentation.new_note.NewNoteActivity
 import nick.mirosh.notes.presentation.theme.MyApplicationTheme
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -53,7 +51,13 @@ class MainActivity : ComponentActivity() {
                 val notes =
                     remember { mainViewModel.notes.value ?: mutableListOf() }.toMutableStateList()
                 MainScreen(notes = notes) {
-                    startActivity(Intent(this@MainActivity, NewNoteActivity::class.java))
+                    val bundle = Bundle().apply {
+                        putInt("noteId", it)
+                    }
+                    val intent = Intent(this@MainActivity, NewNoteActivity::class.java).also {
+                        it.putExtras(bundle)
+                    }
+                    startActivity(intent)
                 }
             }
         }
@@ -61,20 +65,20 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen(modifier: Modifier = Modifier, notes: List<Note>, onAddButton: () -> Unit) {
+fun MainScreen(modifier: Modifier = Modifier, notes: List<Note>, onNoteClicked: (Int) -> Unit) {
 
     Box(
         modifier = modifier.fillMaxSize(),
     ) {
-
-        NotesList(notes)
+        NotesList(notes) { noteId ->
+            onNoteClicked(noteId)
+        }
         AddNoteButton(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp)
         ) {
-
-            onAddButton()
+            onNoteClicked(-1)
         }
     }
 }
@@ -95,16 +99,24 @@ fun AddNoteButton(modifier: Modifier = Modifier, onCLicked: () -> Unit) {
 @Composable
 fun NotesListPreview() {
     MyApplicationTheme {
-        NotesList(listOf())
+        NotesList(listOf()) {
+
+        }
     }
 }
 
 
 @Composable
-fun NotesList(list: List<Note>, modifier: Modifier = Modifier) {
+fun NotesList(list: List<Note>, modifier: Modifier = Modifier, onItemCLick: (Int) -> Unit) {
     LazyColumn {
         items(list) {
-            NoteItem(note = it, modifier = modifier.padding(8.dp))
+            NoteItem(
+                note = it, modifier = modifier
+                    .padding(8.dp)
+                    .clickable(onClick = {
+                        onItemCLick(it.id)
+                    })
+            )
         }
     }
 }
