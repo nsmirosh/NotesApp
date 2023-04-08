@@ -3,6 +3,7 @@ package nick.mirosh.notes.presentation.new_note
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,18 +24,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import dagger.hilt.android.AndroidEntryPoint
 import nick.mirosh.notes.data.di.MyApplication
 import nick.mirosh.notes.domain.Note
+import nick.mirosh.notes.presentation.main.MainViewModel
 import nick.mirosh.notes.presentation.theme.MyApplicationTheme
 import javax.inject.Inject
-
+@AndroidEntryPoint
 class NewNoteActivity : ComponentActivity() {
 
-    @Inject
-    lateinit var newNoteViewModel: NewNoteViewModel
+    private val newNoteViewModel: NewNoteViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        (applicationContext as MyApplication).appComponent.inject(this)
         super.onCreate(savedInstanceState)
 
         val extras = intent.extras

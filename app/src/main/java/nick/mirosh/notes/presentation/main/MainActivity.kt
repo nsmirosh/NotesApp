@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
@@ -32,27 +32,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import dagger.hilt.android.AndroidEntryPoint
 import nick.mirosh.notes.data.di.MyApplication
-import nick.mirosh.notes.data.di.viewmodels.ViewModelFactory
 import nick.mirosh.notes.domain.Note
 import nick.mirosh.notes.presentation.composables.NoteItem
 import nick.mirosh.notes.presentation.new_note.NewNoteActivity
 import nick.mirosh.notes.presentation.theme.MyApplicationTheme
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val mainViewModel: MainViewModel by viewModels()
 
-    lateinit var mainViewModel: MainViewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        (applicationContext as MyApplication).appComponent.inject(this)
-        super.onCreate(savedInstanceState)
-
-        mainViewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
-
+    override fun onResume() {
+        super.onResume()
+        mainViewModel.getNotes()
         setContent {
             MyApplicationTheme {
                 val notes =
@@ -62,11 +57,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mainViewModel.getNotes()
     }
 }
 

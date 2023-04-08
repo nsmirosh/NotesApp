@@ -1,10 +1,14 @@
 package nick.mirosh.notes.presentation.theme.storage
 
 import android.util.Log
-import nick.mirosh.notes.data.di.annotations.MyCustomScope
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import nick.mirosh.notes.domain.Note
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class NoteDaoImpl @Inject constructor() : NoteDao {
 
     private val notes = mutableListOf<Note>()
@@ -38,19 +42,3 @@ class NoteDaoImpl @Inject constructor() : NoteDao {
         return notes.find { it.id == id }
     }
 }
-
-
-/*
-class NoteDaoImpl @Inject constructor(): NoteDao {
-    override fun getAllNotes(): List<Note> {
-        TODO("Not yet implemented")
-    }
-
-    override fun insertOrUpdate(note: Note) {
-        TODO("Not yet implemented")
-    }
-
-    override fun delete(note: Note) {
-        TODO("Not yet implemented")
-    }
-}*/

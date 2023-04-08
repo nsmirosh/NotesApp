@@ -4,12 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import nick.mirosh.notes.data.di.annotations.MyCustomScope
 import nick.mirosh.notes.domain.Note
 import nick.mirosh.notes.domain.repos.NoteRepository
 import javax.inject.Inject
-
+@HiltViewModel
 class NewNoteViewModel @Inject constructor(private val notesRepository: NoteRepository) :
     ViewModel() {
 

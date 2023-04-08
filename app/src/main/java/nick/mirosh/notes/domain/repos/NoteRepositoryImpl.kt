@@ -33,30 +33,3 @@ class NoteRepositoryImpl @Inject constructor(private val noteDao: NoteDao) : Not
         }
     }
 }
-
-
-/*
-
-class NoteRepository(
-    private val noteDao: NoteDao,
-    private val ioDispatcher: CoroutineDispatcher
-) {
-    suspend fun getAllNotes(): List<Note> {
-        return withContext(ioDispatcher) {
-            noteDao.getAllNotes()
-        }
-    }
-
-    suspend fun saveOrUpdate(note: Note) {
-        withContext(ioDispatcher) {
-            noteDao.insertOrUpdate(note)
-        }
-    }
-
-    suspend fun delete(note: Note) {
-        withContext(ioDispatcher) {
-            noteDao.delete(note)
-        }
-    }
-}
- */
